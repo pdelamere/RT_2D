@@ -1,5 +1,5 @@
 close,1
-dir = '/Volumes/Scratch/hybrid/RT/RT_bhs/'
+dir = '/Volumes/Scratch/hybrid/RT/RT_bhs_3/'
 
 buffstat=1
 cbt = 0.02
@@ -11,7 +11,7 @@ read_coords,dir,x,y,z
 read_para,dir
 restore,dir+'para.sav'
 
-nframe=11
+nframe=7
 
 loadct,33
 s_max = 255

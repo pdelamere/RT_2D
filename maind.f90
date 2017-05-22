@@ -55,7 +55,7 @@ program hybrid
       
       if (my_rank .eq. 0) then
 !            call check_inputs()
-            write(*,*) 'Partilces per cell... ', Ni_tot_sys/nz
+            write(*,*) 'Particles per cell... ', Ni_tot_sys/((nx-2)*(ny-2)*nz)
             write(*,*) ' '
       endif
       
@@ -102,8 +102,8 @@ program hybrid
       !Initialize particles: use load Maxwellian, or sw_part_setup, etc.
 !      call load_Maxwellian(vth,1,mion,1.0)
      
-      call load_RT(vth,1,mion,1.0)
-!      call load_RT_pad(vth,1,mion,1.0)
+!      call load_RT(vth,1,mion,1.0)
+      call load_RT_pad(vth,1,mion,1.0)
       
       if (my_rank .eq. 0) then
             call check_inputs()     
@@ -113,7 +113,7 @@ program hybrid
       
       Ni_tot_sys = Ni_tot*procnum
       write(*,*) Ni_tot_sys, Ni_tot, procnum
-      write(*,*) 'Particles per cell...', Ni_tot_sys/(nz*nx)
+      write(*,*) 'Particles per cell...', Ni_tot_sys/((nz-2)*(nx-2)*(ny-2))
       
       call f_update_tlev(b1,b12,b1p2,bt,b0)
 

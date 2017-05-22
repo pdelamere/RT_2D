@@ -165,7 +165,7 @@ module inputs
                   vth_max = 3*vth
                   m_top = mion
                   m_bottom = mion
-                  Lo = 5.0*dx           !gradient scale length of boundary
+                  Lo = 4.0*dx           !gradient scale length of boundary
                   
                   nu_init = nu_init_frac*omega_p
                   
@@ -183,7 +183,7 @@ module inputs
                   implicit none
                   integer:: i,j,k
                   
-                  real*8:: ak, btot, a1, a2, womega, phi, deltat, va, cwpi
+                  real*8:: ak, btot, a1, a2, womega, phi, deltat, va, cwpi,pbeta
                   
       ! Check input paramters
       
@@ -224,16 +224,18 @@ module inputs
                         write(*,*) 'Bottom paramters...'
                         write(*,*) '  '
                         va = b0_init/sqrt(mu0*m_bottom*np_bottom/1e9)/1e3
-                        
+                        pbeta =  vth/va
+
                         write(*,*) 'Alfven veloctiy ......', va
                         write(*,*) 'Thermal velocity......', vth_top
+                        write(*,*) 'Plasma beta...........',pbeta
                         write(*,*) 'Mach number...........', vbottom/(va+vth_bottom)
                         
                         write(*,*) 'Thermal gyroradius....', m_bottom*vth_bottom/(q*b0_init),m_bottom*vth_bottom/(q*b0_init)/dx
                         cwpi = 3.0e8/sqrt((np_bottom/1.0e9)*q*q/(epsilon*m_bottom))
                         write(*,*) 'Ion inertial length...', cwpi/1e3,cwpi/1e3/dx
                         
-!                        write(*,*) 'Particles per cell...', Ni_tot_sys/(nx*nz)
+!                        write(*,*) 'Particles per cell...', Ni_tot_sys/((ny-2)*(nx-2)*(nz-2))
 
                         write(*,*) '  '
                         write(*,*) 'Top parameters...'

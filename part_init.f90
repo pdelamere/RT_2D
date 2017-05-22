@@ -296,10 +296,10 @@ module part_init
             real:: rnd
             integer:: Ni_tot_p_t,Ni_tot_2
 
-            grav0= .1*vth_bottom**2/Lo
+            grav0= .4*vth_bottom**2/Lo
             do i=1,nx
                do j=1,ny
-                  grav(i,j,:)=-grav0*(tanh((qz(:)-qz(nz/2) - 180*delz)/(10*delz))-tanh((qz(:)-qz(nz/2)+180*delz)/(10*delz)))
+                  grav(i,j,:)=-grav0*(tanh((qz(:)-qz(nz/2) - 60*delz)/(10*delz))-tanh((qz(:)-qz(nz/2)+60*delz)/(10*delz)))
                enddo
             enddo
             
