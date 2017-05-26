@@ -24,7 +24,7 @@ program hybrid
       character(1):: mstart
       integer:: ierr,t1,t2,cnt_rt,m,mstart_n,ndiag,seed
       real(8):: time
-      logical:: restart = .false.
+      logical:: restart = .true.
       integer(4):: Ni_tot_sw,Ni_tot_sys
       integer:: i,j,k,n,ntf !looping indicies
       real (real64) :: dp
@@ -59,7 +59,7 @@ program hybrid
             write(*,*) ' '
       endif
       
-      mstart_n = 3 !number of times restarted
+      mstart_n = 0 !number of times restarted
       write(mstart, '(I1)') mstart_n
       
       ndiag = 0

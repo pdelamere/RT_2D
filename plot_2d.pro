@@ -25,8 +25,9 @@ pro plot_2d,nf
 device,decomposed=0
 loadct,27
 
-dir = '/Volumes/Scratch/hybrid/RT/RT_bhs_4/'
+dir = '/Volumes/Scratch/hybrid/RT/RT_bhs_5/'
 
+mrestart = '_0'
 nframe=nf
 read_para,dir
 restore,filename=dir+'para.sav'
@@ -40,11 +41,11 @@ w = window(dimensions=[xsz,ysz],/buffer)
 !p.multi=[0,3,1]
 for nfrm = 1,nframe,1 do begin
 
-   c_read_3d_vec_m_32,dir,'c.b1',nfrm,b1
-   c_read_3d_vec_m_32,dir,'c.up',nfrm,up
-   c_read_3d_m_32,dir,'c.np',nfrm,np
-   c_read_3d_m_32,dir,'c.temp_p',nfrm,tp
-   c_read_3d_m_32,dir,'c.mixed',nfrm,mix
+   c_read_3d_vec_m_32,dir,'c.b1'+mrestart,nfrm,b1
+   c_read_3d_vec_m_32,dir,'c.up'+mrestart,nfrm,up
+   c_read_3d_m_32,dir,'c.np'+mrestart,nfrm,np
+   c_read_3d_m_32,dir,'c.temp_p'+mrestart,nfrm,tp
+   c_read_3d_m_32,dir,'c.mixed'+mrestart,nfrm,mix
 
    comegapi = (z(1)-z(0))*2
 
