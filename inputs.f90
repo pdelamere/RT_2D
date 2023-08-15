@@ -251,7 +251,8 @@ module inputs
                         
                         
                   endif
-                  
+                  va = b0_init/sqrt(mu0*m_top*nf_init/1e9)/1e3
+                  write(*,*) 'va...',my_rank,va
                   
             end subroutine check_inputs
             

@@ -344,16 +344,17 @@ module part_init
             integer(4):: Ni_tot_1 
             real, intent(in):: mratio, mass, pbeta
             real:: npb(nz),npt(nz), np_tot(nz)  !need to establish analytical density profile                     
-            real:: vth, vx, vy, vz, grav0, vbal(nx)
+            real:: vth, vx, vy, vz, grav0, vbal(nz)
             integer:: l,m,i,j,k,flg
             real:: rnd, np_top,np_bottom, vol,mode
             !ratio = 0.75
             !Lo = 4.0*delz
             mode = 1.0
-            vth = 50.0!sqrt(pbeta*va**2)
-            !vth = sqrt(pbeta*va**2)
-            !write(*,*) 'vth...',vth,sqrt(pbeta*va**2)
-            grav0= .4*vth**2/Lo  !0.4 originally
+            !vth = 100.0!sqrt(pbeta*va**2)
+            vth = sqrt(pbeta*va**2)
+            write(*,*) 'vth...',vth,va,sqrt(pbeta*va**2)
+            !grav0= .4*vth**2/Lo  !0.4 originally
+            grav0 = 0.1
             beta = 1.0
             vol = (qx(nx-1)-qx(1))*(qy(ny-1)-qy(1))*(qz(nz)-qz(1))!dx*dy*delz
             !beta = real(Ni_tot*(1.0-ratio)*procnum)/vol/np_top
@@ -373,6 +374,7 @@ module part_init
                vbal(k) = sqrt((vbal(1))**2 - (vth**2/np_top)*(npb(k)-npb(1)) + &
                     2*sum(grav(1,1,1:k)*np_tot(1:k))*delz/np_top)
             enddo
+            
             ! Load population 1, where vth is constant, but n varies
             do l = 1, int(Ni_tot*ratio,4)
                   xp(l,1) = qx(1)+(1.0-pad_ranf())*(qx(nx-1)-qx(1))

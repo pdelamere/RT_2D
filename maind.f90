@@ -29,6 +29,7 @@ program hybrid
       integer:: i,j,k,n,ntf !looping indicies
       real (real64) :: dp
       integer, parameter :: dp_kind = kind(dp)
+      integer:: ndiag_part
       
 !      filenum = (/'1 ','2 ','3 ','4 ','5 ','6 ','7 ','8 ','9 ', &
 !            '10','11','12','13','14','15','16'/)
@@ -53,17 +54,18 @@ program hybrid
       Ni_tot_sw = Ni_tot
       Ni_tot_sys = Ni_tot*procnum
       
-      if (my_rank .eq. 0) then
-            call check_inputs()
-            write(*,*) 'Total particles, PPP, #pc', Ni_tot_sys,Ni_tot,procnum
-            write(*,*) 'Partilces per cell... ', Ni_tot_sys/((nz-2)*(ny-2)*(nx-2))
-            write(*,*) ' '
-      endif
+      !if (my_rank .eq. 0) then
+      call check_inputs()
+      write(*,*) 'Total particles, PPP, #pc', Ni_tot_sys,Ni_tot,procnum
+      write(*,*) 'Partilces per cell... ', Ni_tot_sys/((nz-2)*(ny-2)*(nx-2))
+      write(*,*) ' '
+      !endif
       
       mstart_n = 0 !number of times restarted
       write(mstart, '(I1)') mstart_n
       
       ndiag = nout-1
+      ndiag_part = 0
       prev_Etot = 1.0
 !      nuei = 0.0
 
@@ -106,6 +108,7 @@ program hybrid
 !      call load_const_ppc(vth,1,mion,1.0)
       !      call load_RT_pad(vth,1,mion,1.0)
       call loadRT_ppc(vth,mion,1.0)
+      call MPI_BARRIER(MPI_COMM_WORLD,ierr)
   
 !      call load_den_grad(1,mion,1.0)
 !      call count_ppc()
@@ -245,10 +248,10 @@ program hybrid
        endif
        
        if (my_rank .gt. 0) then
-!            open(305,file=trim(out_dir)//'c.xp_'//trim(filenum)//'_'//trim(mstart)//'.dat',status='unknown',form='unformatted')
-!            open(310,file=trim(out_dir)//'c.vp_'//trim(filenum)//'_'//trim(mstart)//'.dat',status='unknown',form='unformatted')
-!            open(315,file=trim(out_dir)//'c.mrat_'//trim(filenum)//'_'//trim(mstart)//'.dat',status='unknown',form='unformatted')
-!            open(317,file=trim(out_dir)//'c.beta_p__'//trim(filenum)//'_'//trim(mstart)//'.dat',status='unknown',form='unformatted')
+            open(305,file=trim(out_dir)//'c.xp_'//trim(filenum)//'_'//trim(mstart)//'.dat',status='unknown',form='unformatted')
+            open(310,file=trim(out_dir)//'c.vp_'//trim(filenum)//'_'//trim(mstart)//'.dat',status='unknown',form='unformatted')
+            open(315,file=trim(out_dir)//'c.mrat_'//trim(filenum)//'_'//trim(mstart)//'.dat',status='unknown',form='unformatted')
+            open(317,file=trim(out_dir)//'c.beta_p_'//trim(filenum)//'_'//trim(mstart)//'.dat',status='unknown',form='unformatted')
        endif
        
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -338,6 +341,7 @@ program hybrid
             endif
             
             ndiag = ndiag+1
+            ndiag_part = ndiag_part + 1
             if (ndiag .eq. nout) then
                   call get_temperature()
                   call update_rho()
@@ -402,7 +406,34 @@ program hybrid
                         
                         ndiag = 0
                   endif
-                   
+
+                  if (ndiag_part .eq. nout*4) then
+                     if (my_rank .eq. 0) then
+                        write(305) m
+                        write(305) xp
+                        write(310) m
+                        write(310) vp
+                        write(315) m
+                        write(315) mrat
+                        write(317) m
+                        write(317) beta_p
+                        endif
+
+                     if (my_rank .gt. 0) then
+                        write(305) m
+                        write(305) xp
+                        write(310) m
+                        write(310) vp
+                        write(315) m
+                        write(315) mrat
+                        write(317) m
+                        write(317) beta_p
+                        endif
+
+                     ndiag_part = 0
+                  endif
+
+                  
             endif
 !            write(*,*) 'minimum density.....', minval(np(:,:,:))
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
